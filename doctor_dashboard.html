@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            background: #f4f6f9;
+            display: flex;
+        }
+
+        /* SIDEBAR */
+
+        .navbar {
+            display: flex;
+            flex-direction: column;
+            width: 230px;
+            height: 100vh;
+            background: linear-gradient(180deg, #007BFF, #0056b3);
+            color: white;
+            padding-top: 30px;
+            position: fixed;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar button,
+        .navbar a button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 15px 25px;
+            text-align: left;
+            width: 100%;
+            transition: 0.3s;
+        }
+
+        .navbar button:hover,
+        .navbar a button:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* MAIN CONTENT */
+
+        .main-content {
+            margin-left: 230px;
+            padding: 30px;
+            width: calc(100% - 230px);
+        }
+
+        /* TAB CONTENT */
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* PROFILE CARD */
+
+        .profile-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            max-width: 450px;
+        }
+
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 4px solid #007BFF;
+        }
+
+        /* BUTTONS */
+
+        button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button.submit-reply {
+            background: #28a745;
+            color: white;
+        }
+
+        button.submit-reply:hover {
+            background: #218838;
+        }
+
+        /* CONSULTATION CARDS */
+
+        .consult-box {
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 20px;
+            background: white;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+            transition: 0.2s;
+        }
+
+        .consult-box:hover {
+            transform: translateY(-2px);
+        }
+
+        .consult-box.pending {
+            border-left: 6px solid #dc3545;
+        }
+
+        .consult-box.replied {
+            border-left: 6px solid #28a745;
+        }
+
+        textarea {
+            width: 100%;
+            height: 70px;
+            margin-top: 8px;
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            resize: none;
+        }
+
+        /* REPORT LINK */
+
+        a {
+            color: #007BFF;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+
+        <button onclick="openTab('profile')"> Profile</button>
+        <button onclick="openTab('messages')"> Messages</button>
+
+        <a href="{{ url_for('logout') }}">
+            <button> Logout</button>
+        </a>
+
+    </div>
+
+
+    <div class="main-content">
+
+        <!-- PROFILE TAB -->
+        <div id="profile" class="tab-content active">
+
+            <div class="profile-card">
+
+                <h2>{{ doctor.name }}'s Profile</h2>
+
+                {% if doctor.profile_path %}
+                <img src="{{ url_for('static', filename=doctor.profile_path) }}" class="profile-img">
+                {% else %}
+                <img src="{{ url_for('static', filename='profile_uploads/default.jpg') }}" class="profile-img">
+                {% endif %}
+
+                <form method="POST" enctype="multipart/form-data">
+
+                    <input type="file" name="profile_photo" required>
+                    <br><br>
+                    <button type="submit">Upload Photo</button>
+
+                </form>
+
+                <hr>
+                <p><strong>ID:</strong> {{ doctor.id }}</p>
+                <p><strong>Name:</strong> {{ doctor.name }}</p>
+                <p><strong>Email:</strong> {{ doctor.email }}</p>
+                <p><strong>Specialization:</strong> {{ doctor.specialization }}</p>
+                <p><strong>Phone:</strong> {{ doctor.phone_number }}</p>
+
+            </div>
+
+        </div>
+
+
+        <!-- MESSAGES TAB -->
+        <div id="messages" class="tab-content">
+
+            <h2>Consultations</h2>
+
+            {% for consult in consultations %}
+
+            <div class="consult-box {% if consult.status=='pending' %}pending{% else %}replied{% endif %}">
+
+                <p>
+                    <strong>ID:</strong> {{ consult.id }}
+                    &nbsp;&nbsp;
+                    <strong>Date:</strong> {{ consult.created_at }}
+                </p>
+
+                <p><strong>Patient ID:</strong> {{ consult.patient_id }}</p>
+
+                <p>
+                    <strong>Report:</strong>
+                    <a href="{{ url_for('static', filename=consult.report_path) }}" target="_blank">
+                        View Report
+                    </a>
+                </p>
+
+                <p><strong>Prediction:</strong> {{ consult.prediction }}</p>
+
+                <p><strong>Confidence Score:</strong> {{ consult.confidence_score }}%</p>
+
+                <p><strong>Patient Description:</strong> {{ consult.patient_description }}</p>
+
+                {% if consult.status=='pending' %}
+
+                <form method="POST">
+
+                    <input type="hidden" name="consult_id" value="{{ consult.id }}">
+
+                    <label><strong>Doctor Reply:</strong></label>
+
+                    <textarea name="doctor_reply" placeholder="Write your advice here..." required></textarea>
+
+                    <button type="submit" class="submit-reply">Submit Reply</button>
+
+                </form>
+
+                {% else %}
+
+                <p><strong>Doctor Reply:</strong> {{ consult.doctor_reply }}</p>
+
+                {% endif %}
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        function openTab(tabName) {
+
+            const tabs = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            document.getElementById(tabName).classList.add('active');
+
+        }
+
+    </script>
+
+</body>
+
+</html>

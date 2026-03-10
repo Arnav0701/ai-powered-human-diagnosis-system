@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Pneumonia Detection</title>
+
+    <style>
+
+        body{
+            font-family: Arial, sans-serif;
+            background:#f2f2f2;
+
+            display:flex;
+            justify-content:center;
+            align-items:center;
+
+            height:100vh;
+            margin:0;
+        }
+
+        .container{
+            background:white;
+            padding:30px;
+            width:420px;
+            border-radius:10px;
+            box-shadow:0px 0px 15px rgba(0,0,0,0.1);
+            text-align:center;
+        }
+
+        h2{
+            margin-bottom:20px;
+        }
+
+        select,input[type="file"]{
+            width:95%;
+            padding:8px;
+            margin-top:8px;
+            border-radius:5px;
+            border:1px solid #ccc;
+        }
+
+        button{
+            padding:10px 18px;
+            border:none;
+            border-radius:5px;
+            cursor:pointer;
+            margin-top:10px;
+        }
+
+        .predict-btn{
+            background:#007BFF;
+            color:white;
+        }
+
+        .predict-btn:hover{
+            background:#0056b3;
+        }
+
+        .back-btn{
+            background:#6c757d;
+            color:white;
+        }
+
+        .back-btn:hover{
+            background:#545b62;
+        }
+
+        .result{
+            margin-top:20px;
+            padding:15px;
+            background:#f9f9f9;
+            border-radius:8px;
+        }
+
+        img{
+            margin-top:10px;
+            border-radius:5px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Upload Chest X-Ray Image</h2>
+
+    <form action="/predict" method="post" enctype="multipart/form-data">
+
+        <label>Report Type</label><br>
+
+        <select name="report_type">
+            <option value="X-Ray">X-Ray</option>
+            <option value="Pneumonia">Pneumonia</option>
+            <option value="Brain tumer">Brain tumer</option>
+        </select>
+
+        <br><br>
+
+        <input type="file" name="file" required>
+
+        <br>
+
+        <button class="predict-btn" type="submit">Predict</button>
+
+    </form>
+
+    {% if prediction %}
+    <div class="result">
+
+        <h3>Result: {{ prediction }}</h3>
+        <h4>Confidence: {{ confidence }}%</h4>
+
+        <img src="{{ image_path }}" width="300">
+
+    </div>
+    {% endif %}
+
+    <br>
+
+    <a href="/patient_dashboard">
+        <button class="back-btn">Back</button>
+    </a>
+
+</div>
+
+</body>
+</html>
