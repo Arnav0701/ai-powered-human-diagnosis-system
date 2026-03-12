@@ -179,55 +179,6 @@ AI-Powered-Human-Diagnosis-System
 
 ---
 
-# Database Structure
-
-The project uses **three main database tables**.
-
-### Patients Table
-
-Stores patient information.
-
-Fields include:
-
-* id
-* name
-* email
-* age
-* phone
-* password
-* profile_path
-
-### Doctors Table
-
-Stores doctor information.
-
-Fields include:
-
-* id
-* name
-* email
-* specialization
-* phone_number
-* password
-* profile_path
-
-### Reports Table
-
-Stores AI prediction reports.
-
-Fields include:
-
-* id
-* patient_id
-* report_type
-* report_path
-* prediction
-* confidence
-* report_date
-* status
-
----
-
 # Installation and Setup
 
 ### 1. Clone the Repository
@@ -298,6 +249,34 @@ http://localhost:5000
 
 ---
 
+#Tech Stack
+##Backend:
+Python – Core programming language used for model integration and server logic
+Flask – Lightweight web framework used to build the backend and handle routing, requests, and responses
+Flask-SQLAlchemy – ORM used to interact with the MySQL database
+
+## Machine Learning / AI:
+TensorFlow / Keras – Used to build and load the deep learning model for pneumonia detection
+NumPy – Used for numerical operations and image array processing
+Keras Image Preprocessing – Used for loading and resizing chest X-ray images
+
+## Database:
+MySQL – Stores patient details, doctor details, and generated diagnosis reports
+
+## Frontend:
+HTML5 – Structure of web pages
+CSS3 – Styling and layout of the application
+Jinja2 – Template engine used by Flask to render dynamic HTML pages
+
+## Tools & Libraries:
+Werkzeug Security – Used for password hashing and authentication
+Pip – Dependency management using requirements.txt
+
+## Image Processing:
+TensorFlow Keras Image Utilities – Used for resizing images to 150×150 pixels and converting them into arrays for prediction.
+
+---
+
 # Advantages of the System
 
 * Faster preliminary medical analysis
@@ -326,21 +305,8 @@ http://localhost:5000
 
 ---
 
-# Contributors
-
-* **Arnav Singh**
-* **Honey Pal**
-* **Luv Tiwari**
-* **Krishnanshue Sharma**
-
----
-
 # License
 
 This project is developed for **academic and research purposes**.
 
----
 
-# Acknowledgement
-
-We would like to thank our faculty mentors and institution for providing the guidance and resources required to complete this project successfully.
