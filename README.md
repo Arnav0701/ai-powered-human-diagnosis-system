@@ -7,6 +7,17 @@ The **AI Powered Human Diagnosis System** is a web-based healthcare assistance p
 This project combines **Deep Learning**, **Web Development**, and **Database Management** to create a complete diagnostic workflow that connects patients and doctors in a single platform.
 
 The main goal of this project is to demonstrate how AI can support healthcare professionals by providing **quick preliminary analysis** and assisting in early detection of diseases such as **pneumonia from chest X-ray images**.
+<img width="1919" height="1010" alt="Screenshot 2026-03-10 115044" src="https://github.com/user-attachments/assets/85b5d518-f047-450e-8bf3-0f23081e2906" />
+<img width="1919" height="1007" alt="Screenshot 2026-03-10 114630" src="https://github.com/user-attachments/assets/e887b808-0c62-4cf8-9144-98736064f420" />
+<img width="1495" height="882" alt="Screenshot 2026-03-10 114613" src="https://github.com/user-attachments/assets/10b9bf9c-c5f4-4a5d-9789-429b08407101" />
+<img width="1397" height="832" alt="Screenshot 2026-03-10 114513" src="https://github.com/user-attachments/assets/bb2c0987-377e-4531-bee2-8c6366a5e26b" />
+<img width="914" height="611" alt="Screenshot 2026-03-10 114501" src="https://github.com/user-attachments/assets/218c8fdb-31fd-400a-87c0-065810f7a56d" />
+<img width="1919" height="1007" alt="Screenshot 2026-03-10 114448" src="https://github.com/user-attachments/assets/eae8be8f-fb41-40ea-b32f-4fea3e045470" />
+<img width="1919" height="1007" alt="Screenshot 2026-03-10 114412" src="https://github.com/user-attachments/assets/dd4460e3-71f7-4759-a6f8-6a2f9c6ff50c" />
+<img width="1919" height="995" alt="Screenshot 2026-03-10 114403" src="https://github.com/user-attachments/assets/4d4b3d73-3c42-49c1-a674-6d39eaf5747e" />
+<img width="1919" height="1008" alt="Screenshot 2026-03-10 114313" src="https://github.com/user-attachments/assets/c4d0d228-4be0-4e1a-9d5b-a1bc837caab6" />
+
+
 
 ---
 
