@@ -8,7 +8,6 @@ This project combines **Deep Learning**, **Web Development**, and **Database Man
 
 The main goal of this project is to demonstrate how AI can support healthcare professionals by providing **quick preliminary analysis** and assisting in early detection of diseases such as **pneumonia from chest X-ray images**.
 <img width="1919" height="1010" alt="Screenshot 2026-03-10 115044" src="https://github.com/user-attachments/assets/85b5d518-f047-450e-8bf3-0f23081e2906" />
-<img width="1919" height="1007" alt="Screenshot 2026-03-10 114630" src="https://github.com/user-attachments/assets/e887b808-0c62-4cf8-9144-98736064f420" />
 <img width="1495" height="882" alt="Screenshot 2026-03-10 114613" src="https://github.com/user-attachments/assets/10b9bf9c-c5f4-4a5d-9789-429b08407101" />
 <img width="1397" height="832" alt="Screenshot 2026-03-10 114513" src="https://github.com/user-attachments/assets/bb2c0987-377e-4531-bee2-8c6366a5e26b" />
 <img width="914" height="611" alt="Screenshot 2026-03-10 114501" src="https://github.com/user-attachments/assets/218c8fdb-31fd-400a-87c0-065810f7a56d" />
