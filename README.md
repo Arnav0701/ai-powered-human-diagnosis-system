@@ -7,6 +7,7 @@ The **AI Powered Human Diagnosis System** is a web-based healthcare assistance p
 This project combines **Deep Learning**, **Web Development**, and **Database Management** to create a complete diagnostic workflow that connects patients and doctors in a single platform.
 
 The main goal of this project is to demonstrate how AI can support healthcare professionals by providing **quick preliminary analysis** and assisting in early detection of diseases such as **pneumonia from chest X-ray images**.
+
 <img width="1919" height="1010" alt="Screenshot 2026-03-10 115044" src="https://github.com/user-attachments/assets/85b5d518-f047-450e-8bf3-0f23081e2906" />
 <img width="1495" height="882" alt="Screenshot 2026-03-10 114613" src="https://github.com/user-attachments/assets/10b9bf9c-c5f4-4a5d-9789-429b08407101" />
 <img width="1397" height="832" alt="Screenshot 2026-03-10 114513" src="https://github.com/user-attachments/assets/bb2c0987-377e-4531-bee2-8c6366a5e26b" />
@@ -246,34 +247,6 @@ http://localhost:5000
 5. Patient can view report in dashboard.
 6. Patient can send report to doctor for consultation.
 7. Doctor reviews report and replies with advice.
-
----
-
-#Tech Stack
-##Backend:
-Python – Core programming language used for model integration and server logic
-Flask – Lightweight web framework used to build the backend and handle routing, requests, and responses
-Flask-SQLAlchemy – ORM used to interact with the MySQL database
-
-## Machine Learning / AI:
-TensorFlow / Keras – Used to build and load the deep learning model for pneumonia detection
-NumPy – Used for numerical operations and image array processing
-Keras Image Preprocessing – Used for loading and resizing chest X-ray images
-
-## Database:
-MySQL – Stores patient details, doctor details, and generated diagnosis reports
-
-## Frontend:
-HTML5 – Structure of web pages
-CSS3 – Styling and layout of the application
-Jinja2 – Template engine used by Flask to render dynamic HTML pages
-
-## Tools & Libraries:
-Werkzeug Security – Used for password hashing and authentication
-Pip – Dependency management using requirements.txt
-
-## Image Processing:
-TensorFlow Keras Image Utilities – Used for resizing images to 150×150 pixels and converting them into arrays for prediction.
 
 ---
 
