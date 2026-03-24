@@ -1,130 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Pneumonia Detection</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prediction | Diagnosis</title>
 
-    <style>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap"
+        rel="stylesheet">
 
-        body{
-            font-family: Arial, sans-serif;
-            background:#f2f2f2;
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-            display:flex;
-            justify-content:center;
-            align-items:center;
-
-            height:100vh;
-            margin:0;
-        }
-
-        .container{
-            background:white;
-            padding:30px;
-            width:420px;
-            border-radius:10px;
-            box-shadow:0px 0px 15px rgba(0,0,0,0.1);
-            text-align:center;
-        }
-
-        h2{
-            margin-bottom:20px;
-        }
-
-        select,input[type="file"]{
-            width:95%;
-            padding:8px;
-            margin-top:8px;
-            border-radius:5px;
-            border:1px solid #ccc;
-        }
-
-        button{
-            padding:10px 18px;
-            border:none;
-            border-radius:5px;
-            cursor:pointer;
-            margin-top:10px;
-        }
-
-        .predict-btn{
-            background:#007BFF;
-            color:white;
-        }
-
-        .predict-btn:hover{
-            background:#0056b3;
-        }
-
-        .back-btn{
-            background:#6c757d;
-            color:white;
-        }
-
-        .back-btn:hover{
-            background:#545b62;
-        }
-
-        .result{
-            margin-top:20px;
-            padding:15px;
-            background:#f9f9f9;
-            border-radius:8px;
-        }
-
-        img{
-            margin-top:10px;
-            border-radius:5px;
-        }
-
-    </style>
-
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
-<body>
+<body class="predict-page">
 
-<div class="container">
+    <div class="bg-animated"></div>
 
-    <h2>Upload Chest X-Ray Image</h2>
+    <div class="predict-card">
 
-    <form action="/predict" method="post" enctype="multipart/form-data">
+        <span class="brand-icon">🧠</span>
+        <h2>AI-Powered Diagnosis</h2>
+        <p class="predict-subtitle">Upload a medical image for instant analysis</p>
 
-        <label>Report Type</label><br>
+        <form action="/predict" method="post" enctype="multipart/form-data">
 
-        <select name="report_type">
-            <option value="X-Ray">X-Ray</option>
-            <option value="Pneumonia">Pneumonia</option>
-            <option value="Brain tumer">Brain tumer</option>
-        </select>
+            <div class="form-group" style="text-align:left;">
+                <label><i class="fas fa-file-medical"></i> Report Type</label>
+                <select name="report_type" class="form-select">
+                    <option value="X-Ray">X-Ray</option>
+                    <option value="Pneumonia">Pneumonia</option>
+                    <option value="Brain tumer">Brain tumer</option>
+                </select>
+            </div>
 
-        <br><br>
+            <div class="form-group" style="text-align:left;">
+                <label><i class="fas fa-upload"></i> Upload Image</label>
+                <input type="file" name="file" class="form-file" required>
+            </div>
 
-        <input type="file" name="file" required>
+            <button class="btn btn-primary btn-block" type="submit">
+                <i class="fas fa-brain"></i> Predict
+            </button>
 
-        <br>
+        </form>
 
-        <button class="predict-btn" type="submit">Predict</button>
+        {% if prediction %}
+        <div class="result-box">
+            <h3><i class="fas fa-clipboard-check"></i> Result: {{ prediction }}</h3>
+            <h4>Confidence: {{ confidence }}%</h4>
+            <img src="{{ image_path }}" width="300" alt="Uploaded scan">
+        </div>
+        {% endif %}
 
-    </form>
-
-    {% if prediction %}
-    <div class="result">
-
-        <h3>Result: {{ prediction }}</h3>
-        <h4>Confidence: {{ confidence }}%</h4>
-
-        <img src="{{ image_path }}" width="300">
+        <div class="predict-actions">
+            <a href="/patient_dashboard">
+                <button class="btn btn-back" type="button">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+            </a>
+        </div>
 
     </div>
-    {% endif %}
-
-    <br>
-
-    <a href="/patient_dashboard">
-        <button class="back-btn">Back</button>
-    </a>
-
-</div>
 
 </body>
+
 </html>
