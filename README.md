@@ -8,16 +8,29 @@ This project combines **Deep Learning**, **Web Development**, and **Database Man
 
 The main goal of this project is to demonstrate how AI can support healthcare professionals by providing **quick preliminary analysis** and assisting in early detection of diseases such as **pneumonia from chest X-ray images**.
 
-<img width="1919" height="1010" alt="Screenshot 2026-03-10 115044" src="https://github.com/user-attachments/assets/85b5d518-f047-450e-8bf3-0f23081e2906" />
-<img width="1495" height="882" alt="Screenshot 2026-03-10 114613" src="https://github.com/user-attachments/assets/10b9bf9c-c5f4-4a5d-9789-429b08407101" />
-<img width="1397" height="832" alt="Screenshot 2026-03-10 114513" src="https://github.com/user-attachments/assets/bb2c0987-377e-4531-bee2-8c6366a5e26b" />
-<img width="914" height="611" alt="Screenshot 2026-03-10 114501" src="https://github.com/user-attachments/assets/218c8fdb-31fd-400a-87c0-065810f7a56d" />
-<img width="1919" height="1007" alt="Screenshot 2026-03-10 114448" src="https://github.com/user-attachments/assets/eae8be8f-fb41-40ea-b32f-4fea3e045470" />
-<img width="1919" height="1007" alt="Screenshot 2026-03-10 114412" src="https://github.com/user-attachments/assets/dd4460e3-71f7-4759-a6f8-6a2f9c6ff50c" />
-<img width="1919" height="995" alt="Screenshot 2026-03-10 114403" src="https://github.com/user-attachments/assets/4d4b3d73-3c42-49c1-a674-6d39eaf5747e" />
-<img width="1919" height="1008" alt="Screenshot 2026-03-10 114313" src="https://github.com/user-attachments/assets/c4d0d228-4be0-4e1a-9d5b-a1bc837caab6" />
+<img width="1919" height="892" alt="Screenshot 2026-03-24 135134" src="https://github.com/user-attachments/assets/bd4f09c8-1f9b-48d1-9a1e-d6719f41aabe" />
 
+<img width="1917" height="894" alt="Screenshot 2026-03-24 135150" src="https://github.com/user-attachments/assets/ae6830ff-4643-489a-b090-b592d509f65f" />
 
+<img width="1919" height="890" alt="Screenshot 2026-03-24 135247" src="https://github.com/user-attachments/assets/47760ff1-aef1-4548-a2e4-afd071ee37b4" />
+
+<img width="1919" height="890" alt="Screenshot 2026-03-24 135307" src="https://github.com/user-attachments/assets/01a4ae36-ec87-4937-93fa-e7dfbacee8e1" />
+
+<img width="1918" height="889" alt="Screenshot 2026-03-24 135414" src="https://github.com/user-attachments/assets/ef68d1f6-3ad3-499b-8abb-084203e5f1d6" />
+
+<img width="1919" height="893" alt="Screenshot 2026-03-24 135429" src="https://github.com/user-attachments/assets/a64dd323-d235-46ba-ad46-968ad0bb2fe1" />
+
+<img width="1919" height="891" alt="Screenshot 2026-03-24 135444" src="https://github.com/user-attachments/assets/cb8cd134-f41f-46be-8835-510c5336fce7" />
+
+<img width="1919" height="891" alt="Screenshot 2026-03-24 135444" src="https://github.com/user-attachments/assets/64bca750-671b-46ac-a7ec-9eb27098ebb7" />
+
+<img width="1919" height="887" alt="Screenshot 2026-03-24 170816" src="https://github.com/user-attachments/assets/fdbb2c65-c84f-47e2-bcfb-fb3657f73392" />
+
+<img width="1907" height="885" alt="Screenshot 2026-03-24 170837" src="https://github.com/user-attachments/assets/fb45670f-c056-427c-8405-e1f7e1b86f78" />
+
+<img width="1908" height="883" alt="Screenshot 2026-03-24 170900" src="https://github.com/user-attachments/assets/4340211f-6df0-4e7c-8251-3b1a74cce7db" />
+
+<img width="1916" height="884" alt="Screenshot 2026-03-24 171211" src="https://github.com/user-attachments/assets/8d0c94a3-6d95-4433-8554-a891ac36880e" />
 
 ---
 
