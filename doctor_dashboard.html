@@ -4,208 +4,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor Dashboard</title>
+    <title>Doctor Dashboard | AI Diagnosis</title>
 
-    <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0;
-            background: #f4f6f9;
-            display: flex;
-        }
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap"
+        rel="stylesheet">
 
-        /* SIDEBAR */
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-        .navbar {
-            display: flex;
-            flex-direction: column;
-            width: 230px;
-            height: 100vh;
-            background: linear-gradient(180deg, #007BFF, #0056b3);
-            color: white;
-            padding-top: 30px;
-            position: fixed;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .navbar button,
-        .navbar a button {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            padding: 15px 25px;
-            text-align: left;
-            width: 100%;
-            transition: 0.3s;
-        }
-
-        .navbar button:hover,
-        .navbar a button:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        /* MAIN CONTENT */
-
-        .main-content {
-            margin-left: 230px;
-            padding: 30px;
-            width: calc(100% - 230px);
-        }
-
-        /* TAB CONTENT */
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* PROFILE CARD */
-
-        .profile-card {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-            max-width: 450px;
-        }
-
-        .profile-img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 15px;
-            border: 4px solid #007BFF;
-        }
-
-        /* BUTTONS */
-
-        button {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        button.submit-reply {
-            background: #28a745;
-            color: white;
-        }
-
-        button.submit-reply:hover {
-            background: #218838;
-        }
-
-        /* CONSULTATION CARDS */
-
-        .consult-box {
-            border-radius: 10px;
-            padding: 18px;
-            margin-bottom: 20px;
-            background: white;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
-            transition: 0.2s;
-        }
-
-        .consult-box:hover {
-            transform: translateY(-2px);
-        }
-
-        .consult-box.pending {
-            border-left: 6px solid #dc3545;
-        }
-
-        .consult-box.replied {
-            border-left: 6px solid #28a745;
-        }
-
-        textarea {
-            width: 100%;
-            height: 70px;
-            margin-top: 8px;
-            margin-bottom: 10px;
-            padding: 8px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            resize: none;
-        }
-
-        /* REPORT LINK */
-
-        a {
-            color: #007BFF;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        h2 {
-            margin-top: 0;
-        }
-    </style>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
 
-    <div class="navbar">
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
 
-        <button onclick="openTab('profile')"> Profile</button>
-        <button onclick="openTab('messages')"> Messages</button>
+        <div class="sidebar-brand">
+            <h3>🩺 AI Diagnosis</h3>
+            <span>Doctor Portal</span>
+        </div>
 
-        <a href="{{ url_for('logout') }}">
-            <button> Logout</button>
-        </a>
+        <div class="sidebar-nav">
+            <button class="nav-item active" onclick="openTab('profile', this)">
+                <i class="fas fa-user-circle"></i>
+                <span>Profile</span>
+            </button>
+            <button class="nav-item" onclick="openTab('messages', this)">
+                <i class="fas fa-envelope"></i>
+                <span>Messages</span>
+            </button>
+        </div>
+
+        <div class="sidebar-footer">
+            <a href="{{ url_for('logout') }}" class="nav-item" style="color: var(--danger);">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
 
     </div>
 
-
+    <!-- Main Content -->
     <div class="main-content">
 
-        <!-- PROFILE TAB -->
+        <!-- Profile Tab -->
         <div id="profile" class="tab-content active">
+
+            <div class="page-header">
+                <h2>{{ doctor.name }}'s Profile</h2>
+            </div>
 
             <div class="profile-card">
 
-                <h2>{{ doctor.name }}'s Profile</h2>
-
                 {% if doctor.profile_path %}
-                <img src="{{ url_for('static', filename=doctor.profile_path) }}" class="profile-img">
+                <img src="{{ url_for('static', filename=doctor.profile_path) }}" class="profile-img"
+                    alt="Doctor profile">
                 {% else %}
-                <img src="{{ url_for('static', filename='profile_uploads/default.jpg') }}" class="profile-img">
+                <img src="{{ url_for('static', filename='profile_uploads/default.jpg') }}" class="profile-img"
+                    alt="Doctor profile">
                 {% endif %}
 
                 <form method="POST" enctype="multipart/form-data">
-
-                    <input type="file" name="profile_photo" required>
-                    <br><br>
-                    <button type="submit">Upload Photo</button>
-
+                    <div class="profile-upload-form">
+                        <input type="file" name="profile_photo" class="form-file" required>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-upload"></i> Upload
+                        </button>
+                    </div>
                 </form>
 
-                <hr>
-                <p><strong>ID:</strong> {{ doctor.id }}</p>
-                <p><strong>Name:</strong> {{ doctor.name }}</p>
-                <p><strong>Email:</strong> {{ doctor.email }}</p>
-                <p><strong>Specialization:</strong> {{ doctor.specialization }}</p>
-                <p><strong>Phone:</strong> {{ doctor.phone_number }}</p>
+                <div class="profile-info">
+                    <div class="profile-info-row">
+                        <span class="profile-info-label">ID</span>
+                        <span class="profile-info-value">{{ doctor.id }}</span>
+                    </div>
+                    <div class="profile-info-row">
+                        <span class="profile-info-label">Name</span>
+                        <span class="profile-info-value">{{ doctor.name }}</span>
+                    </div>
+                    <div class="profile-info-row">
+                        <span class="profile-info-label">Email</span>
+                        <span class="profile-info-value">{{ doctor.email }}</span>
+                    </div>
+                    <div class="profile-info-row">
+                        <span class="profile-info-label">Specialization</span>
+                        <span class="profile-info-value">{{ doctor.specialization }}</span>
+                    </div>
+                    <div class="profile-info-row">
+                        <span class="profile-info-label">Phone</span>
+                        <span class="profile-info-value">{{ doctor.phone_number }}</span>
+                    </div>
+                </div>
 
             </div>
 
         </div>
 
-
-        <!-- MESSAGES TAB -->
+        <!-- Messages Tab -->
         <div id="messages" class="tab-content">
 
-            <h2>Consultations</h2>
+            <div class="page-header">
+                <h2>Consultations</h2>
+                <p>Review patient consultations and provide medical advice</p>
+            </div>
 
             {% for consult in consultations %}
 
@@ -215,6 +121,12 @@
                     <strong>ID:</strong> {{ consult.id }}
                     &nbsp;&nbsp;
                     <strong>Date:</strong> {{ consult.created_at }}
+                    &nbsp;&nbsp;
+                    {% if consult.status == 'pending' %}
+                    <span class="badge badge-pending">Pending</span>
+                    {% else %}
+                    <span class="badge badge-success">Replied</span>
+                    {% endif %}
                 </p>
 
                 <p><strong>Patient ID:</strong> {{ consult.patient_id }}</p>
@@ -222,7 +134,7 @@
                 <p>
                     <strong>Report:</strong>
                     <a href="{{ url_for('static', filename=consult.report_path) }}" target="_blank">
-                        View Report
+                        <i class="fas fa-file-medical"></i> View Report
                     </a>
                 </p>
 
@@ -238,17 +150,25 @@
 
                     <input type="hidden" name="consult_id" value="{{ consult.id }}">
 
-                    <label><strong>Doctor Reply:</strong></label>
+                    <label
+                        style="font-weight:600; color:var(--text-secondary); font-size:0.85rem; margin-top:12px; display:block;">
+                        <i class="fas fa-pen"></i> Doctor Reply
+                    </label>
 
-                    <textarea name="doctor_reply" placeholder="Write your advice here..." required></textarea>
+                    <textarea name="doctor_reply" placeholder="Write your medical advice here..." required></textarea>
 
-                    <button type="submit" class="submit-reply">Submit Reply</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-paper-plane"></i> Submit Reply
+                    </button>
 
                 </form>
 
                 {% else %}
 
-                <p><strong>Doctor Reply:</strong> {{ consult.doctor_reply }}</p>
+                <p style="margin-top:12px; padding:12px; background:rgba(16,185,129,0.08); border-radius:8px;">
+                    <strong><i class="fas fa-check-circle" style="color:var(--success);"></i> Doctor Reply:</strong>
+                    {{ consult.doctor_reply }}
+                </p>
 
                 {% endif %}
 
@@ -260,19 +180,17 @@
 
     </div>
 
-
     <script>
-
-        function openTab(tabName) {
-
+        function openTab(tabName, clickedBtn) {
             const tabs = document.querySelectorAll('.tab-content');
-
             tabs.forEach(tab => tab.classList.remove('active'));
 
             document.getElementById(tabName).classList.add('active');
 
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            if (clickedBtn) clickedBtn.classList.add('active');
         }
-
     </script>
 
 </body>
