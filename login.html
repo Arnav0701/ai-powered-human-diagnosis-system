@@ -1,141 +1,80 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | AI Diagnosis</title>
 
-```
-<!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap"
+        rel="stylesheet">
 
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f2f2f2;
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        min-height: 100vh;
-        margin: 0;
-    }
-
-    .container-box {
-        background: white;
-        padding: 30px;
-        width: 350px;
-        border-radius: 10px;
-        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        margin-top: 80px;
-    }
-
-    h2 {
-        margin-bottom: 20px;
-    }
-
-    input {
-        width: 90%;
-        padding: 8px;
-        margin-top: 5px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-    }
-
-    button {
-        padding: 10px 20px;
-        border: none;
-        background-color: #007BFF;
-        color: white;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    button:hover {
-        background-color: #0056b3;
-    }
-
-    .signup-btn {
-        margin-top: 10px;
-        background-color: #28a745;
-    }
-
-    .signup-btn:hover {
-        background-color: #1e7e34;
-    }
-
-    .alert-container {
-        width: 350px;
-        margin-top: 30px;
-    }
-</style>
-```
-
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
-<body>
+<body class="auth-page">
 
-```
-<!-- Flash Alerts -->
-<div class="alert-container">
+    <div class="bg-animated"></div>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    {% for category, message in messages %}
-
-    <div class="alert alert-{{ 'danger' if category == 'fail' else 'success' }} alert-dismissible fade show"
-        role="alert">
-
-        {{ message }}
-
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-
+    <!-- Flash Alerts -->
+    <div class="alert-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ 'danger' if category == 'fail' else 'success' }} alert-dismissible fade show"
+            role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
     </div>
 
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
+    <div class="auth-card">
 
-</div>
-
-
-<div class="container-box">
-
-    <h2>Account Login</h2>
-
-    <div id="loginForm">
+        <span class="brand-icon">🩺</span>
+        <h2>Welcome Back</h2>
+        <p class="auth-subtitle">Sign in to your diagnosis account</p>
 
         <form method="POST" action="/login">
 
-            <label>Email</label><br>
-            <input type="text" name="email" required><br><br>
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <input type="text" name="email" class="form-input" placeholder="Enter your email" required>
+            </div>
 
-            <label>Password</label><br>
-            <input type="password" name="password" required><br><br>
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Password</label>
+                <input type="password" name="password" class="form-input" placeholder="Enter your password" required>
+            </div>
 
-            <button type="submit">Login</button>
+            <button type="submit" class="btn btn-primary btn-block">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
 
         </form>
 
-    </div>
+        <hr class="auth-divider">
 
-    <div style="margin-top:20px;">
-        <p>Don't have an account?</p>
-
-        <a href="/signup">
-            <button type="button" class="signup-btn">Signup</button>
-        </a>
+        <div class="auth-footer">
+            <p>Don't have an account? <a href="/signup">Create one</a></p>
+        </div>
 
     </div>
 
-</div>
-
-
-<!-- Bootstrap JS (for closing alerts) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-```
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 
