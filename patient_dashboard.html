@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard | AI Diagnosis</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <!-- Floating Navbar -->
+    <nav class="float-nav">
+        <div class="float-nav-brand">
+            <span class="float-nav-logo">🩺</span>
+            <div>
+                <span class="float-nav-title">AI Diagnosis</span>
+                <span class="float-nav-sub">Patient Portal</span>
+            </div>
+        </div>
+
+        <div class="float-nav-links">
+            <button class="fnav-item {{ 'active' if active_tab == 'home' else '' }}" onclick="openTab('home', this)"
+                id="btn-home">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </button>
+            <button class="fnav-item {{ 'active' if active_tab == 'profile' else '' }}"
+                onclick="openTab('profile', this)" id="btn-profile">
+                <i class="fas fa-user-circle"></i>
+                <span>Profile</span>
+            </button>
+            <button class="fnav-item {{ 'active' if active_tab == 'reports' else '' }}"
+                onclick="openTab('reports', this)" id="btn-reports">
+                <i class="fas fa-file-medical-alt"></i>
+                <span>Reports</span>
+            </button>
+            <button class="fnav-item {{ 'active' if active_tab == 'doctors' else '' }}"
+                onclick="openTab('doctors', this)" id="btn-doctors">
+                <i class="fas fa-user-md"></i>
+                <span>Doctors</span>
+            </button>
+        </div>
+
+        <div class="float-nav-actions">
+            <a href="{{ url_for('logout') }}" class="fnav-logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content-full">
+
+        <!-- Flash Messages -->
+        <div style="max-width: 1300px; margin: 0 auto; width: 100%; padding: 20px 40px 0 40px;">
+            <style>
+                .flash-msg-box {
+                    padding: 16px 20px;
+                    border-radius: 12px;
+                    font-weight: 500;
+                    font-family: 'Inter', sans-serif;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-bottom: 8px;
+                }
+
+                .flash-msg-fail {
+                    background: rgba(239, 68, 68, 0.15);
+                    color: #FCA5A5;
+                    border: 1px solid rgba(239, 68, 68, 0.3);
+                }
+
+                .flash-msg-success {
+                    background: rgba(16, 185, 129, 0.15);
+                    color: #6EE7B7;
+                    border: 1px solid rgba(16, 185, 129, 0.3);
+                }
+            </style>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash-msg-box {% if category == 'fail' %}flash-msg-fail{% else %}flash-msg-success{% endif %}">
+                <span>
+                    {% if category == 'fail' %}
+                    <i class="fas fa-exclamation-circle" style="margin-right:8px;"></i>
+                    {% else %}
+                    <i class="fas fa-check-circle" style="margin-right:8px;"></i>
+                    {% endif %}
+                    {{ message }}
+                </span>
+                <button type="button" onclick="closeAlert(this)"
+                    style="background: none; border: none; color: inherit; font-size: 1.2rem; cursor: pointer; padding: 0 4px; opacity: 0.8;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
+
+        <!-- Home Tab -->
+        <div id="home" class="tab-content {{ 'active' if active_tab == 'home' else '' }}">
+
+            <div class="page-header">
+                <h2>Welcome {{name}} </h2>
+                <p>What would you like to do today?</p>
+            </div>
+
+            <div class="action-cards">
+
+                <div class="action-card" onclick="window.location.href='/predict'">
+                    <span class="action-card-icon">🧠</span>
+                    <h3>AI Diagnosis</h3>
+                    <p>Upload a medical image for AI-powered analysis</p>
+                </div>
+
+                <div class="action-card" onclick="window.location.href='/send_consultation'">
+                    <span class="action-card-icon">💬</span>
+                    <h3>Consult a Doctor</h3>
+                    <p>Send your reports to a specialist for review</p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Profile Tab -->
+        <div id="profile" class="tab-content {{ 'active' if active_tab == 'profile' else '' }}">
+
+            <div class="page-header">
+                <h2>My Profile</h2>
+            </div>
+
+            <div class="profile-card">
+
+                {% if profile_path %}
+                <img src="{{url_for('static', filename=profile_path)}}" class="profile-img" alt="Profile">
+                {% else %}
+                <img src="{{ url_for('static', filename='profile_uploads/default.jpg') }}" class="profile-img"
+                    alt="Profile">
+                {% endif %}
+
+                <div
+                    style="text-align: center; margin-bottom: 10px; font-weight: 600; color: rgba(241, 245, 249, 0.5); font-family: 'Inter', sans-serif;">
+                    #{{id}}
+                </div>
+
+                {% if request.args.get('edit_mode') == 'true' %}
+                <form action="/patient_dashboard" method="POST" enctype="multipart/form-data">
+                    <div class="profile-upload-form" style="margin-bottom: 20px;">
+                        <input type="file" name="profile_photo" class="form-file" required>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-upload"></i> Upload
+                        </button>
+                    </div>
+                </form>
+                {% endif %}
+
+                {% if request.args.get('edit_mode') == 'true' %}
+                <!-- Editable Profile Form -->
+                <form action="/update_patient_profile" method="POST" class="profile-info">
+                    <div class="profile-info-row">
+                        <span class="profile-info-label" style="align-self:center;">Name</span>
+                        <input type="text" name="name" value="{{name}}" class="form-input"
+                            style="padding:10px; background:rgba(255,255,255,0.05); color:#F1F5F9; border:1px solid rgba(255,255,255,0.15); border-radius:6px; width:100%;">
+                    </div>
+                    <div class="profile-info-row">
+                        <span class="profile-info-label" style="align-self:center;">Age</span>
+                        <input type="number" name="age" value="{{age}}" class="form-input"
+                            style="padding:10px; background:rgba(255,255,255,0.05); color:#F1F5F9; border:1px solid rgba(255,255,255,0.15); border-radius:6px; width:100%;">
+                    </div>
+                    <div class="profile-info-row">
+                        <span class="profile-info-label" style="align-self:center;">Email</span>
+                        <input type="email" name="email" value="{{email}}" class="form-input"
+                            style="padding:10px; background:rgba(255,255,255,0.05); color:#F1F5F9; border:1px solid rgba(255,255,255,0.15); border-radius:6px; width:100%;">
+                    </div>
+                    <div class="profile-info-row">
+                        <span class="profile-info-label" style="align-self:center;">Phone</span>
+                        <input type="text" name="phone" value="{{phone}}" class="form-input"
+                            style="padding:10px; background:rgba(255,255,255,0.05); color:#F1F5F9; border:1px solid rgba(255,255,255,0.15); border-radius:6px; width:100%;">
+                    </div>
+
+                    <!-- Security Verification Block -->
+                    <div
+                        style="margin-top:24px; padding:20px; background:rgba(239, 68, 68, 0.05); border:1px solid rgba(239, 68, 68, 0.2); border-radius:12px;">
+                        <h4 style="margin:0 0 12px; color:#FCA5A5; font-size:1rem;"><i class="fas fa-lock"></i> Verify
+                            Identity to Save</h4>
+                        <div class="profile-info-row" style="border-bottom:none; margin-bottom:0; padding-bottom:0;">
+                            <input type="password" name="verify_password" placeholder="Enter your current password"
+                                class="form-input"
+                                style="padding:12px; background:rgba(0,0,0,0.3); color:#F1F5F9; border:1px solid rgba(239,68,68,0.4); border-radius:6px; width:100%;"
+                                required>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:16px; margin-top:24px;">
+                        <a href="/patient_dashboard#profile" class="btn btn-back"
+                            style="flex:1; text-align:center;">Cancel</a>
+                        <button type="submit" class="btn btn-primary"
+                            style="flex:2; background:#10B981; border-color:#059669; color:white;">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
+
+                {% else %}
+                <!-- Static Profile Display -->
+                <div class="profile-info">
+                    <div class="profile-info-row">
+                        <span class="profile-info-label">Name</span>
+                        <span class="profile-info-value">{{name}}</span>
+                    </div>
+                    <div class="profile-info-row">
+                        <span class="profile-info-label">Age</span>
+                        <span class="profile-info-value">{{age}}</span>
+                    </div>
+                    <div class="profile-info-row">
+                        <span class="profile-info-label">Email</span>
+                        <span class="profile-info-value">{{email}}</span>
+                    </div>
+                    <div class="profile-info-row">
+                        <span class="profile-info-label">Phone</span>
+                        <span class="profile-info-value">{{phone}}</span>
+                    </div>
+
+                    <div style="margin-top:24px;">
+                        <a href="/patient_dashboard?edit_mode=true" class="btn btn-primary"
+                            style="display:block; text-align:center; background:rgba(99,102,241,0.15); border:1px solid rgba(99,102,241,0.4); color:#818CF8; padding:12px; transition:0.3s; text-decoration:none; border-radius:8px;">
+                            <i class="fas fa-pen"></i> Edit Profile
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="reports" class="tab-content {{ 'active' if active_tab == 'reports' else '' }}">
+
+            <div class="page-header">
+                <h2>My Reports</h2>
+                <p>View all your AI-generated diagnostic reports</p>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Report ID</th>
+                        <th>Report Type</th>
+                        <th>Status</th>
+                        <th>Confidence</th>
+                        <th>View</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report in reports %}
+                    <tr>
+                        <td>{{ report.report_date }}</td>
+                        <td>{{ report.id }}</td>
+                        <td>{{ report.report_type }}</td>
+                        <td>{{ report.status }}</td>
+                        <td>{{ report.confidence }}%</td>
+                        <td>
+                            <a href="{{ url_for('static', filename=report.report_path) }}" target="_blank"
+                                style="display:inline-block; border-radius:8px; overflow:hidden; border:2px solid var(--border-subtle); transition:0.3s; width:54px; height:54px;">
+                                <img src="{{ url_for('static', filename=report.report_path) }}"
+                                    style="width:50px; height:50px; object-fit:cover; display:block;"
+                                    alt="Report Image">
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+
+        <!-- Doctors Tab -->
+        <div id="doctors" class="tab-content {{ 'active' if active_tab == 'doctors' else '' }}">
+
+            <div class="page-header">
+                <h2>Available Doctors</h2>
+                <p>Browse specialists for consultation</p>
+            </div>
+
+            {% for doctor in doctors %}
+            <div class="doctor-card">
+
+                <div class="doctor-left">
+                    {% if doctor.profile_path %}
+                    <img src="{{ url_for('static', filename=doctor.profile_path) }}" class="doctor-img" alt="Doctor">
+                    {% else %}
+                    <img src="{{ url_for('static', filename='profile_uploads/default.jpg')}}" class="doctor-img"
+                        alt="Doctor">
+                    {% endif %}
+                </div>
+
+                <div class="doctor-right">
+                    <h3>{{ doctor.name }}</h3>
+                    <p><b>ID:</b> {{ doctor.id }}</p>
+                    <p><b>Email:</b> {{ doctor.email }}</p>
+                    <p><b>Specialization:</b> {{ doctor.specialization }}</p>
+                    <p><b>About:</b> {{ doctor.about }}</p>
+                </div>
+
+            </div>
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    <script>
+        function openTab(tabName, clickedBtn) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+
+            // Update active nav item
+            const navItems = document.querySelectorAll('.fnav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            if (clickedBtn) clickedBtn.classList.add('active');
+        }
+
+        // Floating navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.float-nav');
+            if (nav) nav.classList.toggle('scrolled', window.scrollY > 30);
+        });
+
+        // Smooth Alert Closing
+        function closeAlert(btn) {
+            const alert = btn.closest('.flash-msg-box') || btn.closest('.alert');
+            if (alert) {
+                alert.classList.add('alert-closing');
+                setTimeout(() => {
+                    alert.remove();
+                }, 400);
+            }
+        }
+    </script>
+
+</body>
+
+</html>

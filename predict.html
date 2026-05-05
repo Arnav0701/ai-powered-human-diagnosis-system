@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prediction | Diagnosis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        html, body { margin: 0; padding: 0; min-height: 100vh; }
+
+        /* Centred container — viewport-anchored, no parent dependencies */
+        .pbox {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        /* Inner wrapper: same max-width as navbar (1300px) */
+        .pinner {
+            width: min(calc(100vw - 48px), 1300px);
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        /* ── Header ── */
+        .pheader {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .pheader-icon {
+            font-size: 3.2rem;
+            filter: drop-shadow(0 0 18px rgba(79,70,229,.7));
+        }
+        .pheader h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            margin: 0 0 4px;
+            background: linear-gradient(135deg, #F1F5F9, #6366F1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .pheader p { color: #94A3B8; margin: 0; font-size: 1rem; }
+
+        /* ── Card ── */
+        .pcard {
+            width: 100%;
+            background: rgba(30,41,59,.88);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255,255,255,.09);
+            border-radius: 24px;
+            padding: 52px 60px;
+            box-sizing: border-box;
+            box-shadow: 0 10px 50px rgba(0,0,0,.55);
+        }
+
+        /* ── Two-col form ── */
+        .pgrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 36px;
+            margin-bottom: 32px;
+        }
+        .pgrid .form-group { margin-bottom: 0; }
+        .pgrid .form-select,
+        .pgrid .form-file {
+            font-size: 1rem;
+            padding: 16px 18px;
+            height: 62px;
+        }
+
+        /* ── File preview ── */
+        .ppreview {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 16px 22px;
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 12px;
+            margin-bottom: 32px;
+        }
+        .ppreview img {
+            width: 80px; height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #4F46E5;
+        }
+        .ppreview-name { color: #94A3B8; font-size: .9rem; word-break: break-all; }
+
+        /* ── Submit ── */
+        .psub {
+            font-size: 1.15rem !important;
+            padding: 18px 36px !important;
+            border-radius: 14px !important;
+        }
+
+        /* ── Result ── */
+        .presult {
+            margin-top: 44px;
+            border-top: 1px solid rgba(255,255,255,.08);
+            padding-top: 40px;
+        }
+        .presult-head { display: flex; align-items: center; gap: 14px; margin-bottom: 32px; }
+        .presult-head i { font-size: 1.8rem; color: #10B981; }
+        .presult-head h2 { font-size: 1.6rem; margin: 0; }
+        .presult-body { display: flex; align-items: flex-start; gap: 52px; }
+        .presult-info { flex: 1; display: flex; flex-direction: column; gap: 22px; }
+        .pstat {
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 14px;
+            padding: 22px 30px;
+        }
+        .pstat-label {
+            display: block; font-size: .78rem; font-weight: 600;
+            color: #64748B; text-transform: uppercase;
+            letter-spacing: .07em; margin-bottom: 10px;
+        }
+        .pstat-value { display: block; font-size: 1.8rem; font-weight: 700; color: #F1F5F9; }
+        .pstat-value.green { color: #10B981; }
+        .presult-img img {
+            width: 340px; height: 340px;
+            object-fit: cover;
+            border-radius: 18px;
+            border: 3px solid #4F46E5;
+            box-shadow: 0 0 35px rgba(79,70,229,.35);
+        }
+
+        /* ── Back button row ── */
+        .pactions { display: flex; }
+
+        /* ── Responsive ── */
+        @media (max-width: 860px) {
+            .pcard { padding: 32px 28px; }
+            .pgrid { grid-template-columns: 1fr; }
+            .presult-body { flex-direction: column; }
+            .presult-img img { width: 100%; height: auto; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-animated"></div>
+
+    <div class="pbox">
+        <div class="pinner">
+
+            <!-- Flash Messages -->
+            <div style="width: 100%; margin-bottom: 20px;">
+                <style>
+                    .flash-msg-box { padding: 16px 20px; border-radius: 12px; font-weight: 500; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+                    .flash-msg-fail { background: rgba(239, 68, 68, 0.15); color: #FCA5A5; border: 1px solid rgba(239, 68, 68, 0.3); }
+                    .flash-msg-success { background: rgba(16, 185, 129, 0.15); color: #6EE7B7; border: 1px solid rgba(16, 185, 129, 0.3); }
+                </style>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <div class="flash-msg-box {% if category == 'fail' %}flash-msg-fail{% else %}flash-msg-success{% endif %}">
+                    <span>
+                        {% if category == 'fail' %}
+                            <i class="fas fa-exclamation-circle" style="margin-right:8px;"></i>
+                        {% else %}
+                            <i class="fas fa-check-circle" style="margin-right:8px;"></i>
+                        {% endif %}
+                        {{ message }}
+                    </span>
+                    <button type="button" onclick="closeAlert(this)" style="background: none; border: none; color: inherit; font-size: 1.2rem; cursor: pointer; padding: 0 4px; opacity: 0.8;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+            </div>
+
+            <!-- Header -->
+            <div class="pheader">
+                <span class="pheader-icon">🧠</span>
+                <div>
+                    <h1>AI-Powered Diagnosis</h1>
+                    <p>Upload a medical image and get an instant AI analysis</p>
+                </div>
+            </div>
+
+            <!-- Card -->
+            <div class="pcard">
+                <form action="/predict" method="post" enctype="multipart/form-data">
+
+                    <div class="pgrid">
+                        <div class="form-group">
+                            <label><i class="fas fa-file-medical"></i> Report Type</label>
+                            <select name="report_type" class="form-select">
+                                <option value="X-Ray">X-Ray</option>
+                                <option value="Pneumonia">Pneumonia</option>
+                                <option value="Brain tumer">Brain Tumour</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-upload"></i> Upload Medical Image</label>
+                            <input type="file" name="file" class="form-file" id="fileInput" accept="image/*" required>
+                        </div>
+                    </div>
+
+                    <div class="ppreview" id="previewBox" style="display:none;">
+                        <img id="previewImg" src="" alt="Preview">
+                        <span class="ppreview-name" id="previewName"></span>
+                    </div>
+
+                    <button class="btn btn-primary btn-block psub" type="submit">
+                        <i class="fas fa-brain"></i> Run AI Diagnosis
+                    </button>
+                </form>
+
+                {% if prediction %}
+                <div class="presult">
+                    <div class="presult-head">
+                        <i class="fas fa-clipboard-check"></i>
+                        <h2>Diagnosis Result</h2>
+                    </div>
+                    <div class="presult-body">
+                        <div class="presult-info">
+                            <div class="pstat">
+                                <span class="pstat-label">Prediction</span>
+                                <span class="pstat-value">{{ prediction }}</span>
+                            </div>
+                            <div class="pstat">
+                                <span class="pstat-label">Confidence Score</span>
+                                <span class="pstat-value green">{{ confidence }}%</span>
+                            </div>
+                        </div>
+                        <div class="presult-img">
+                            <img src="{{ image_path }}" alt="Uploaded scan">
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Back -->
+            <div class="pactions">
+                <a href="/patient_dashboard" class="btn btn-back">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function () {
+            const file = this.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                document.getElementById('previewImg').src = e.target.result;
+                document.getElementById('previewName').textContent = file.name;
+                document.getElementById('previewBox').style.display = 'flex';
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Smooth Alert Closing
+        function closeAlert(btn) {
+            const alert = btn.closest('.flash-msg-box') || btn.closest('.alert');
+            if (alert) {
+                alert.classList.add('alert-closing');
+                setTimeout(() => { alert.remove(); }, 400);
+            }
+        }
+    </script>
+</body>
+</html>

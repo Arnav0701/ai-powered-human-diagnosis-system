@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard | AI Diagnosis</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <!-- Floating Navbar -->
+    <nav class="float-nav">
+        <div class="float-nav-brand">
+            <span class="float-nav-logo">🩺</span>
+            <div>
+                <span class="float-nav-title">AI Diagnosis</span>
+                <span class="float-nav-sub">Doctor Portal</span>
+            </div>
+        </div>
+
+        <div class="float-nav-links">
+            <button class="fnav-item {{ 'active' if active_tab == 'profile' else '' }}"
+                onclick="openTab('profile', this)" id="btn-profile">
+                <i class="fas fa-user-circle"></i>
+                <span>Home</span>
+            </button>
+            <button class="fnav-item {{ 'active' if active_tab == 'messages' else '' }}"
+                onclick="openTab('messages', this)" id="btn-messages">
+                <i class="fas fa-envelope"></i>
+                <span>Messages</span>
+            </button>
+        </div>
+
+        <div class="float-nav-actions">
+            <a href="{{ url_for('logout') }}" class="fnav-logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content-full">
+
+        <!-- Flash Messages -->
+        <div style="max-width: 1300px; margin: 0 auto; width: 100%; padding: 20px 40px 0 40px;">
+            <style>
+                .flash-msg-box {
+                    padding: 16px 20px;
+                    border-radius: 12px;
+                    font-weight: 500;
+                    font-family: 'Inter', sans-serif;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-bottom: 8px;
+                }
+
+                .flash-msg-fail {
+                    background: rgba(239, 68, 68, 0.15);
+                    color: #FCA5A5;
+                    border: 1px solid rgba(239, 68, 68, 0.3);
+                }
+
+                .flash-msg-success {
+                    background: rgba(16, 185, 129, 0.15);
+                    color: #6EE7B7;
+                    border: 1px solid rgba(16, 185, 129, 0.3);
+                }
+            </style>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash-msg-box {% if category == 'fail' %}flash-msg-fail{% else %}flash-msg-success{% endif %}">
+                <span>
+                    {% if category == 'fail' %}
+                    <i class="fas fa-exclamation-circle" style="margin-right:8px;"></i>
+                    {% else %}
+                    <i class="fas fa-check-circle" style="margin-right:8px;"></i>
+                    {% endif %}
+                    {{ message }}
+                </span>
+                <button type="button" onclick="closeAlert(this)"
+                    style="background: none; border: none; color: inherit; font-size: 1.2rem; cursor: pointer; padding: 0 4px; opacity: 0.8;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
+
+        <!-- Profile Tab -->
+        <div id="profile" class="tab-content {{ 'active' if active_tab == 'profile' else '' }}">
+
+            <div class="page-header">
+                <h2>Welcome {{ doctor.name }}</h2>
+            </div>
+
+            <div class="profile-card">
+
+                {% if doctor.profile_path %}
+                <img src="{{ url_for('static', filename=doctor.profile_path) }}" class="profile-img"
+                    alt="Doctor profile">
+                {% else %}
+                <img src="{{ url_for('static', filename='profile_uploads/default.jpg') }}" class="profile-img"
+                    alt="Doctor profile">
+                {% endif %}
+
+                <div
+                    style="text-align: center; margin-bottom: 10px; font-weight: 600; color: rgba(241, 245, 249, 0.5); font-family: 'Inter', sans-serif;">
+                    #{{ doctor.id }}
+                </div>
+
+                {% if request.args.get('edit_mode') == 'true' %}
+                <form action="/doctor_dashboard" method="POST" enctype="multipart/form-data">
+                    <div class="profile-upload-form" style="margin-bottom: 20px;">
+                        <input type="file" name="profile_photo" class="form-file" required>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-upload"></i> Upload
+                        </button>
+                    </div>
+                </form>
+                {% endif %}
+
+                {% if request.args.get('edit_mode') == 'true' %}
+                <!-- Editable Doctor Form -->
+                <form action="/update_doctor_profile" method="POST" class="profile-info">
+                    <div class="profile-info-row">
+                        <span class="profile-info-label" style="align-self:center;">Name</span>
+                        <input type="text" name="name" value="{{doctor.name}}" class="form-input"
+                            style="padding:10px; background:rgba(255,255,255,0.05); color:#F1F5F9; border:1px solid rgba(255,255,255,0.15); border-radius:6px; width:100%;">
+                    </div>
+                    <div class="profile-info-row">
+                        <span class="profile-info-label" style="align-self:center;">Email</span>
+                        <input type="email" name="email" value="{{doctor.email}}" class="form-input"
+                            style="padding:10px; background:rgba(255,255,255,0.05); color:#F1F5F9; border:1px solid rgba(255,255,255,0.15); border-radius:6px; width:100%;">
+                    </div>
+                    <div class="profile-info-row">
+                        <span class="profile-info-label" style="align-self:center;">Specialization</span>
+                        <input type="text" name="specialization" value="{{doctor.specialization}}" class="form-input"
+                            style="padding:10px; background:rgba(255,255,255,0.05); color:#F1F5F9; border:1px solid rgba(255,255,255,0.15); border-radius:6px; width:100%;">
+                    </div>
+                    <div class="profile-info-row">
+                        <span class="profile-info-label" style="align-self:center;">Phone</span>
+                        <input type="text" name="phone" value="{{doctor.phone_number}}" class="form-input"
+                            style="padding:10px; background:rgba(255,255,255,0.05); color:#F1F5F9; border:1px solid rgba(255,255,255,0.15); border-radius:6px; width:100%;">
+                    </div>
+                    <div class="profile-info-row" style="flex-direction:column; align-items:flex-start;">
+                        <span class="profile-info-label" style="margin-bottom:8px;">About</span>
+                        <textarea name="about" class="form-input"
+                            style="padding:10px; background:rgba(255,255,255,0.05); color:#F1F5F9; border:1px solid rgba(255,255,255,0.15); border-radius:6px; width:100%; min-height:100px; resize:vertical;">{{doctor.about}}</textarea>
+                    </div>
+
+                    <!-- Security Verification -->
+                    <div
+                        style="margin-top:24px; padding:20px; background:rgba(239, 68, 68, 0.05); border:1px solid rgba(239, 68, 68, 0.2); border-radius:12px;">
+                        <h4 style="margin:0 0 12px; color:#FCA5A5; font-size:1rem;"><i class="fas fa-lock"></i> Verify
+                            Identity to Save</h4>
+                        <div class="profile-info-row" style="border-bottom:none; margin-bottom:0; padding-bottom:0;">
+                            <input type="password" name="verify_password" placeholder="Enter your current password"
+                                class="form-input"
+                                style="padding:12px; background:rgba(0,0,0,0.3); color:#F1F5F9; border:1px solid rgba(239,68,68,0.4); border-radius:6px; width:100%;"
+                                required>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:16px; margin-top:24px;">
+                        <a href="/doctor_dashboard?active_tab=profile" class="btn btn-back"
+                            style="flex:1; text-align:center;">Cancel</a>
+                        <button type="submit" class="btn btn-primary"
+                            style="flex:2; background:#10B981; border-color:#059669; color:white;">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
+                {% else %}
+                <!-- Static Doctor Display -->
+                <div class="profile-info">
+                    <div class="profile-info-row">
+                        <span class="profile-info-label">Name</span>
+                        <span class="profile-info-value">{{ doctor.name }}</span>
+                    </div>
+                    <div class="profile-info-row">
+                        <span class="profile-info-label">Email</span>
+                        <span class="profile-info-value">{{ doctor.email }}</span>
+                    </div>
+                    <div class="profile-info-row">
+                        <span class="profile-info-label">Specialization</span>
+                        <span class="profile-info-value">{{ doctor.specialization }}</span>
+                    </div>
+                    <div class="profile-info-row">
+                        <span class="profile-info-label">Phone</span>
+                        <span class="profile-info-value">{{ doctor.phone_number }}</span>
+                    </div>
+                    <div class="profile-info-row" style="flex-direction:column; align-items:flex-start;">
+                        <span class="profile-info-label">About</span>
+                        <p class="profile-info-value" style="margin-top:8px; line-height:1.6; opacity:0.8;">{{
+                            doctor.about }}</p>
+                    </div>
+
+                    <div style="margin-top:24px;">
+                        <a href="/doctor_dashboard?edit_mode=true&active_tab=profile" class="btn btn-primary"
+                            style="display:block; text-align:center; background:rgba(99,102,241,0.15); border:1px solid rgba(99,102,241,0.4); color:#818CF8; padding:12px; transition:0.3s; text-decoration:none; border-radius:8px;">
+                            <i class="fas fa-pen"></i> Edit Profile
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <!-- Messages Tab -->
+        <div id="messages" class="tab-content {{ 'active' if active_tab == 'messages' else '' }}">
+
+            <div class="page-header">
+                <h2>Consultations</h2>
+                <p>Review patient consultations and provide medical advice</p>
+            </div>
+
+            {% for consult in consultations %}
+
+            <div class="consult-box {% if consult.status=='pending' %}pending{% else %}replied{% endif %}">
+
+                <p>
+                    <strong>ID:</strong> {{ consult.id }}
+                    &nbsp;&nbsp;
+                    <strong>Date:</strong> {{ consult.created_at }}
+                    &nbsp;&nbsp;
+                    {% if consult.status == 'pending' %}
+                    <span class="badge badge-pending">Pending</span>
+                    {% else %}
+                    <span class="badge badge-success">Replied</span>
+                    {% endif %}
+                </p>
+
+                <p><strong>Patient ID:</strong> {{ consult.patient_id }}</p>
+
+                <p>
+                    <strong>Report:</strong>
+                    <a href="{{ url_for('static', filename=consult.report_path) }}" target="_blank">
+                        <i class="fas fa-file-medical"></i> View Report
+                    </a>
+                </p>
+
+                <p><strong>Prediction:</strong> {{ consult.prediction }}</p>
+
+                <p><strong>Confidence Score:</strong> {{ consult.confidence_score }}%</p>
+
+                <p><strong>Patient Description:</strong> {{ consult.patient_description }}</p>
+
+                {% if consult.status=='pending' %}
+
+                <form method="POST">
+
+                    <input type="hidden" name="consult_id" value="{{ consult.id }}">
+
+                    <label
+                        style="font-weight:600; color:var(--text-secondary); font-size:0.85rem; margin-top:12px; display:block;">
+                        <i class="fas fa-pen"></i> Doctor Reply
+                    </label>
+
+                    <textarea name="doctor_reply" placeholder="Write your medical advice here..." required></textarea>
+
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-paper-plane"></i> Submit Reply
+                    </button>
+
+                </form>
+
+                {% else %}
+
+                <p style="margin-top:12px; padding:12px; background:rgba(16,185,129,0.08); border-radius:8px;">
+                    <strong><i class="fas fa-check-circle" style="color:var(--success);"></i> Doctor Reply:</strong>
+                    {{ consult.doctor_reply }}
+                </p>
+
+                {% endif %}
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    <script>
+        function openTab(tabName, clickedBtn) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            document.getElementById(tabName).classList.add('active');
+
+            const navItems = document.querySelectorAll('.fnav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            if (clickedBtn) clickedBtn.classList.add('active');
+        }
+
+        // Floating navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.float-nav');
+            if (nav) nav.classList.toggle('scrolled', window.scrollY > 30);
+        });
+
+        // Smooth Alert Closing
+        function closeAlert(btn) {
+            const alert = btn.closest('.flash-msg-box') || btn.closest('.alert');
+            if (alert) {
+                alert.classList.add('alert-closing');
+                setTimeout(() => { alert.remove(); }, 400);
+            }
+        }
+    </script>
+
+</body>
+
+</html>
