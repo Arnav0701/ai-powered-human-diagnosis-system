@@ -105,6 +105,21 @@ The system uses a **Convolutional Neural Network (CNN)** model trained on Chest 
 The model expects an input size of `150x150` pixels and provides a confidence score for each prediction.
 
 ---
+## images
+<img width="1235" height="795" alt="Screenshot 2026-04-30 222702" src="https://github.com/user-attachments/assets/b3eaa85e-4e7e-4416-bb30-be4e9e3366d4" />
+
+<img width="1911" height="884" alt="Screenshot 2026-04-30 222950" src="https://github.com/user-attachments/assets/82f5c0d7-3913-4aad-ae5b-98fce59bebb3" />
+
+<img width="1910" height="879" alt="Screenshot 2026-04-30 223024" src="https://github.com/user-attachments/assets/7d74ab10-2ab1-4346-a17b-3cdd19af1857" />
+
+<img width="1861" height="871" alt="Screenshot 2026-04-30 223832" src="https://github.com/user-attachments/assets/43b8d28d-6345-446a-bad2-de50f2677908" />
+
+<img width="1767" height="852" alt="Screenshot 2026-04-30 224004" src="https://github.com/user-attachments/assets/05940c8c-85cf-483e-a35e-e405c53ef715" />
+
+<img width="1807" height="878" alt="Screenshot 2026-04-30 224104" src="https://github.com/user-attachments/assets/e37ea499-300e-4e6b-9ebd-1288dc5f239d" />
+
+<img width="1783" height="883" alt="Screenshot 2026-04-30 224214" src="https://github.com/user-attachments/assets/a9de6790-3d91-4d26-bf22-1780ce25bcc7" />
+
 
 ## 🤝 Contributing
 Contributions are welcome! Please fork the repository and create a pull request with your suggested changes.
